@@ -250,6 +250,53 @@
   .prod-name{ font-size:15.5px; color:var(--navy-deep); margin-top:3px; font-weight:500; }
   .prod-desc{ font-size:12.5px; color:#5c6a85; margin-top:6px; line-height:1.5; }
   .prod-price{ font-size:14px; color:var(--gold); margin-top:8px; font-weight:600; }
+  .add-to-cart{
+    width:100%; margin-top:14px; border:1px solid var(--navy); background:var(--navy); color:#fff;
+    padding:10px 12px; cursor:pointer; font:500 12px 'Work Sans', sans-serif; transition:background .2s ease, color .2s ease;
+  }
+  .add-to-cart:hover{ background:var(--gold); border-color:var(--gold); color:var(--navy-deep); }
+
+  /* CARRITO Y RECIBO */
+  .cart-button{ position:relative; }
+  .cart-count{
+    position:absolute; top:-7px; right:-7px; min-width:18px; height:18px; padding:0 4px;
+    border-radius:50%; background:var(--gold); color:var(--navy-deep); font-size:11px; line-height:18px; text-align:center;
+  }
+  .cart-overlay{ position:fixed; inset:0; z-index:20; background:rgba(15,26,46,.48); opacity:0; pointer-events:none; transition:opacity .25s ease; }
+  .cart-overlay.open{ opacity:1; pointer-events:auto; }
+  .cart-panel{
+    position:absolute; top:0; right:0; width:min(440px,100%); height:100%; overflow:auto; background:var(--ivory);
+    padding:32px; transform:translateX(100%); transition:transform .3s ease; box-shadow:-12px 0 35px rgba(15,26,46,.16);
+  }
+  .cart-overlay.open .cart-panel{ transform:translateX(0); }
+  .cart-head{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:18px; }
+  .cart-head h2{ font-size:28px; }
+  .cart-close{ border:0; background:none; color:var(--navy); cursor:pointer; font-size:27px; line-height:1; }
+  .cart-items{ list-style:none; margin:18px 0; }
+  .cart-item{ display:grid; grid-template-columns:1fr auto; gap:12px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .cart-item strong{ display:block; font-size:14px; color:var(--navy-deep); }
+  .cart-item small{ display:block; margin-top:4px; color:#5c6a85; }
+  .cart-controls{ display:flex; align-items:center; gap:8px; margin-top:9px; }
+  .qty-btn{ width:25px; height:25px; border:1px solid var(--line); background:#fff; color:var(--navy); cursor:pointer; }
+  .remove-item{ border:0; background:none; color:#9c5060; cursor:pointer; font-size:12px; }
+  .cart-summary{ border-top:1px solid var(--line); padding-top:16px; }
+  .summary-row{ display:flex; justify-content:space-between; gap:16px; padding:5px 0; color:#3d4a63; font-size:14px; }
+  .summary-row.total{ margin-top:8px; color:var(--navy-deep); font-size:18px; font-weight:600; }
+  .checkout-form{ display:grid; gap:10px; margin-top:22px; }
+  .checkout-form label{ color:var(--navy-deep); font-size:12px; font-weight:600; }
+  .checkout-form input,.checkout-form select{ width:100%; border:1px solid var(--line); background:#fff; color:var(--ink); padding:11px; font:14px 'Work Sans', sans-serif; }
+  .empty-cart{ color:#5c6a85; font-size:14px; padding:24px 0; }
+  .receipt{ display:none; position:fixed; inset:0; z-index:30; place-items:center; padding:20px; background:rgba(15,26,46,.6); }
+  .receipt.open{ display:grid; }
+  .receipt-paper{ width:min(520px,100%); max-height:90vh; overflow:auto; background:#fff; padding:34px; color:var(--navy-deep); }
+  .receipt-top{ display:flex; justify-content:space-between; gap:20px; border-bottom:1px solid var(--line); padding-bottom:20px; }
+  .receipt-top h2{ font-size:28px; }
+  .receipt-meta{ color:#5c6a85; font-size:12px; text-align:right; }
+  .receipt-list{ list-style:none; margin:20px 0; }
+  .receipt-list li{ display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .receipt-note{ margin-top:20px; background:var(--cream); padding:13px; color:#3d4a63; font-size:13px; }
+  .receipt-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:22px; }
+  @media (max-width:520px){ .cart-panel{ padding:24px 18px; } .receipt-paper{ padding:24px 18px; } }
 
   /* TESTIMONIOS */
   .testi-grid{
@@ -355,6 +402,10 @@
       <a class="icon-btn" href="https://wa.me/573000000000?text=Hola%2C%20quiero%20asesor%C3%ADa%20de%20maquillaje%20" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1.3-4.1A8 8 0 1 1 9 18.6L4 20Z"/></svg>
       </a>
+      <button class="icon-btn cart-button" id="cartButton" aria-label="Abrir carrito" title="Abrir carrito">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h2l2 11h10l2-8H7"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -731,6 +782,39 @@
   </div>
 </section>
 
+<div class="cart-overlay" id="cartOverlay" aria-hidden="true">
+  <aside class="cart-panel" aria-label="Carrito de compras">
+    <div class="cart-head"><h2>Tu carrito</h2><button class="cart-close" id="cartClose" aria-label="Cerrar carrito">×</button></div>
+    <ul class="cart-items" id="cartItems"></ul>
+    <div class="cart-summary">
+      <div class="summary-row"><span>Subtotal</span><strong id="cartSubtotal">$0</strong></div>
+      <div class="summary-row"><span>Envío</span><strong id="cartShipping">$0</strong></div>
+      <div class="summary-row total"><span>Total</span><strong id="cartTotal">$0</strong></div>
+    </div>
+    <form class="checkout-form" id="checkoutForm">
+      <label for="customerName">Nombre completo</label><input id="customerName" name="customerName" required autocomplete="name">
+      <label for="customerPhone">Teléfono</label><input id="customerPhone" name="customerPhone" required type="tel" autocomplete="tel">
+      <label for="customerAddress">Dirección de entrega</label><input id="customerAddress" name="customerAddress" required autocomplete="street-address">
+      <label for="paymentMethod">Medio de pago</label>
+      <select id="paymentMethod" name="paymentMethod"><option>Nequi / Daviplata</option><option>Contraentrega</option></select>
+      <button class="btn btn-solid" type="submit" id="checkoutButton">Generar recibo de pedido</button>
+    </form>
+  </aside>
+</div>
+
+<div class="receipt" id="receiptModal" aria-hidden="true">
+  <article class="receipt-paper">
+    <div class="receipt-top"><div><span class="kicker">The Velvet Touch</span><h2>Recibo de pedido</h2></div><div class="receipt-meta"><div id="receiptNumber"></div><div id="receiptDate"></div></div></div>
+    <p id="receiptCustomer" style="margin-top:18px;font-size:13px;"></p>
+    <ul class="receipt-list" id="receiptItems"></ul>
+    <div class="summary-row"><span>Subtotal</span><strong id="receiptSubtotal"></strong></div>
+    <div class="summary-row"><span>Envío</span><strong id="receiptShipping"></strong></div>
+    <div class="summary-row total"><span>Total a pagar</span><strong id="receiptTotal"></strong></div>
+    <p class="receipt-note">Pedido recibido. Te contactaremos por WhatsApp para confirmar disponibilidad, pago y entrega en Bucaramanga.</p>
+    <div class="receipt-actions"><button class="btn btn-solid" id="printReceipt" type="button">Imprimir recibo</button><button class="btn btn-outline" id="closeReceipt" type="button">Cerrar</button></div>
+  </article>
+</div>
+
 <footer>
   © 2026 The Velvet Touch — Tienda virtual de maquillaje. Bucaramanga, Colombia.
 </footer>
@@ -759,6 +843,76 @@
       if(!isOpen){ item.classList.add('open'); }
     });
   });
+
+  const cart = [];
+  const cartButton = document.getElementById('cartButton');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const money = value => new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(value);
+  const readCartTotal = () => cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const shippingCost = () => cart.length ? 6000 : 0;
+
+  document.querySelectorAll('.prod-card').forEach(card => {
+    const name = card.querySelector('.prod-name')?.textContent.trim();
+    const priceText = card.querySelector('.prod-price')?.textContent || '';
+    const price = Number(priceText.replace(/[^0-9]/g, ''));
+    if (!name || !price) return;
+    const button = document.createElement('button');
+    button.className = 'add-to-cart'; button.type = 'button'; button.textContent = 'Agregar al carrito';
+    button.addEventListener('click', () => {
+      const existing = cart.find(item => item.name === name);
+      if (existing) existing.quantity += 1;
+      else cart.push({ name, price, quantity:1 });
+      renderCart(); openCart();
+    });
+    card.querySelector('.prod-info').appendChild(button);
+  });
+
+  function renderCart(){
+    const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+    cartCount.textContent = itemCount;
+    cartItems.innerHTML = cart.length ? cart.map((item, index) => `<li class="cart-item"><div><strong>${item.name}</strong><small>${money(item.price)} cada uno</small><div class="cart-controls"><button class="qty-btn" type="button" data-action="decrease" data-index="${index}">-</button><span>${item.quantity}</span><button class="qty-btn" type="button" data-action="increase" data-index="${index}">+</button><button class="remove-item" type="button" data-action="remove" data-index="${index}">Eliminar</button></div></div><strong>${money(item.price * item.quantity)}</strong></li>`).join('') : '<li class="empty-cart">Tu carrito está vacío. Agrega tus productos favoritos desde el catálogo.</li>';
+    const subtotal = readCartTotal();
+    document.getElementById('cartSubtotal').textContent = money(subtotal);
+    document.getElementById('cartShipping').textContent = money(shippingCost());
+    document.getElementById('cartTotal').textContent = money(subtotal + shippingCost());
+  }
+
+  function openCart(){ cartOverlay.classList.add('open'); cartOverlay.setAttribute('aria-hidden','false'); }
+  function closeCart(){ cartOverlay.classList.remove('open'); cartOverlay.setAttribute('aria-hidden','true'); }
+  cartButton.addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', event => { if (event.target === cartOverlay) closeCart(); });
+  cartItems.addEventListener('click', event => {
+    const button = event.target.closest('[data-action]'); if (!button) return;
+    const index = Number(button.dataset.index); const action = button.dataset.action;
+    if (action === 'increase') cart[index].quantity += 1;
+    if (action === 'decrease') cart[index].quantity -= 1;
+    if (action === 'remove' || cart[index].quantity < 1) cart.splice(index, 1);
+    renderCart();
+  });
+
+  document.getElementById('checkoutForm').addEventListener('submit', event => {
+    event.preventDefault();
+    if (!cart.length) { alert('Agrega al menos un producto al carrito.'); return; }
+    const form = new FormData(event.currentTarget);
+    const orderNumber = `VT-${Date.now().toString().slice(-6)}`;
+    const date = new Intl.DateTimeFormat('es-CO', { dateStyle:'long', timeStyle:'short' }).format(new Date());
+    document.getElementById('receiptNumber').textContent = orderNumber;
+    document.getElementById('receiptDate').textContent = date;
+    document.getElementById('receiptCustomer').innerHTML = `<strong>${form.get('customerName')}</strong><br>${form.get('customerPhone')} · ${form.get('customerAddress')}<br>Pago: ${form.get('paymentMethod')}`;
+    document.getElementById('receiptItems').innerHTML = cart.map(item => `<li><span>${item.quantity} × ${item.name}</span><strong>${money(item.price * item.quantity)}</strong></li>`).join('');
+    const subtotal = readCartTotal();
+    document.getElementById('receiptSubtotal').textContent = money(subtotal);
+    document.getElementById('receiptShipping').textContent = money(shippingCost());
+    document.getElementById('receiptTotal').textContent = money(subtotal + shippingCost());
+    closeCart(); document.getElementById('receiptModal').classList.add('open'); document.getElementById('receiptModal').setAttribute('aria-hidden','false');
+  });
+
+  document.getElementById('closeReceipt').addEventListener('click', () => { document.getElementById('receiptModal').classList.remove('open'); document.getElementById('receiptModal').setAttribute('aria-hidden','true'); });
+  document.getElementById('printReceipt').addEventListener('click', () => window.print());
+  renderCart();
 </script>
 </body>
 </html>
